@@ -1,0 +1,37 @@
+---
+- name: install httpd
+  hosts: all
+  become: true
+
+  tasks:
+    - name: install httpd
+      yum:
+        name: httpd
+        state: latest
+
+    
+    - name: start httpd service
+      service:
+        name: httpd
+        enabled: yes
+        state: started
+
+    - name: add user       
+      user:
+        name: aman3
+        groups: root
+        state: present
+        shell: /bin/bash
+
+    - name: add ssh key for aman3
+      authorized_key:
+        user: aman3
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDnGFvT6Rl9J4mgQ54wtNahcRKwTv254cfF32g6KsJECm5YrnkYPpPm/NqUKxReAkOKY/gu4Wge7iKQlXb9iPA9e6QIEl7f+LWZ7pPgrFYwbmy1HLiKDp6jWtxF7J4DXU1wCn1JxsR5P2KTLczQW8RW9j2/D0GwZKfPsMC8f74n0EC0C4m06qQ7GjINEEoBH2ubrDuaC9a66SmrerCkDQsQUrSl6fZuNv8FcgQ3iQeLaK/Q9REv6Bx6awUcmQOOkyndoKh8Yt1E55vIekXhNN5n+egMDmS90tBN7p1hUIH2QYbiWtUvhESV0mfp2veq7S3MUQsKyu06nvnMv7Pby9oj aman@ip-172-31-61-75.ec2.internal"
+
+    - name: add sudoers file for aman3
+      copy:
+        src: sudoer_aman3
+        dest: /etc/sudoers.d/aman3
+        owner: root
+        group: root
+        mode: 0400
